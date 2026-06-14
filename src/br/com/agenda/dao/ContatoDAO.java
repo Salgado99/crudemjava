@@ -92,4 +92,66 @@ public class ContatoDAO {
 		}
 		return contatos;
 	}
+	
+	public void update(Contato contato) {
+		String sql = "UPDATE contatos SET nome = ?, idade = ?, dataCadastro = ? WHERE id = ?";
+		
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		
+		try {
+			conn = ConnectionFactory.createConnectionToMySQL();
+			
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, contato.getNome());
+			pstm.setInt(2, contato.getIdade());
+			pstm.setDate(3, new java.sql.Date(contato.getDataCadastro().getTime()));
+			pstm.setInt(4, contato.getId());
+			pstm.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+		        if (pstm != null) {
+					pstm.close();
+				}
+		        
+		        if (conn != null) {
+		        	conn.close();
+				}
+		    } catch (SQLException e) {
+		        System.out.println("Erro ao fechar o ResultSet: " + e.getMessage());
+		    }
+		}
+		
+		
+	}
+	
+	public void deleteByID(int id) {
+		String sql = "DELETE FROM contatos WHERE id = ? ";
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		
+		try {
+			conn = ConnectionFactory.createConnectionToMySQL();
+			pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, id);
+			pstm.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+		        if (pstm != null) {
+					pstm.close();
+				}
+		        
+		        if (conn != null) {
+		        	conn.close();
+				}
+		    } catch (SQLException e) {
+		        System.out.println("Erro ao fechar o ResultSet: " + e.getMessage());
+		    }
+		}
+		
+	}
 }
